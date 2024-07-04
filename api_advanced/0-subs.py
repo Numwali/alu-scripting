@@ -1,38 +1,16 @@
 #!/usr/bin/python3
-'''
-    This module contains the function number_of_subscribers
-'''
-
-
+"""Function to query subscribers on a given Reddit subreddit."""
 import requests
-from sys import argv
 
 
 def number_of_subscribers(subreddit):
-    '''
-        Returns the number of subscribers for a given subreddit
-    '''
-    user_agent = {'User-Agent': 'Mozilla/5.0'}
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    try:
-        response = requests.get(url, headers=user_agent)
-        response.raise_for_status()  # Raise an error for bad status codes
-        data = response.json()
-        subscribers = data['data']['subscribers']
-        return subscribers
-    except requests.exceptions.RequestException as e:
-        print("Error fetching data:", e)
+    """Return the total number of subscribers on a given subreddit."""
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {
+        "User-Agent": "LloydBot3.2.12 (by /akumuyi)"
+    }
+    response = requests.get(url, headers=headers, allow_redirects=False)
+    if response.status_code == 404:
         return 0
-    except KeyError:
-        print("Subreddit not found or unable to fetch data.")
-        return 0
-
-
-if __name__ == "__main__":
-    if len(argv) != 2:
-        print("Usage: python3 script_name.py subreddit_name")
-        exit(1)
-    subreddit_name = argv[1]
-    subscriber_count = number_of_subscribers(subreddit_name)
-    print(subscriber_count)
-
+    results = response.json().get("data")
+    return results.get("subscribers")
