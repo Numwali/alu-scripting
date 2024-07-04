@@ -1,23 +1,16 @@
 #!/usr/bin/python3
-
+"""Function to query subscribers on a given Reddit subreddit."""
 import requests
 
-def recurse(subreddit, hot_list=[]):
-  # Make API request to get hot articles
-  response = requests.get(f"https://www.reddit.com/r/{subreddit}/hot.json")
 
-  # Check for errors
-  if response.status_code != 200:
-    return None
-
-  # Extract titles
-  data = response.json()
-  titles = [post['data']['title'] for post in data['data']['children']]
-  hot_list.extend(titles)
-
-  # Handle pagination (if there's a next page)
-  if "after" in data['data']:
-    next_page_url = ...  # construct the URL for the next page
-    recurse(subreddit, hot_list)
-
-  return hot_list
+def number_of_subscribers(subreddit):
+    """Return the total number of subscribers on a given subreddit."""
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {
+        "User-Agent": "LloydBot3.2.12 (by /akumuyi)"
+    }
+    response = requests.get(url, headers=headers, allow_redirects=False)
+    if response.status_code == 200:
+        return 0
+    results = response.json().get("data")
+    return results.get("subscribers")
