@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""retuns the number of subscribers function"""
+"""get subscribers numbers function"""
 
 
 import json
